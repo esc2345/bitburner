@@ -1,7 +1,7 @@
 /** @param {NS} ns */
 export async function main(ns) {
   const startupScripts = [
-    '/utils/startup.js',
+    '/utils/startup1.js',
     'scan-root.js'
   ];
   for(let ss of startupScripts){
@@ -12,18 +12,19 @@ export async function main(ns) {
     }
   }
 
+  ns.tprint('\n* * * Learn CS at rothman university until hack level 10. * * *')
+
   let endTime = Date.now() + (1000 * 60 * 2);
   while (Date.now() < endTime) {
     const ram = ns.getServerMaxRam('home') - 3;
     const t = Math.floor(ram / 1.75);
     let pid = ns.run('/scripts/hack.js', t, 'foodnstuff', 0);
-    ns.tprint('hacking foodnstuff');
     while (ns.isRunning(pid)) {
       await ns.sleep(100);
     }
     await ns.sleep(100);
   }
-  ns.tprint('run scan-root.js;\nrun loop.js joesguns');
+  ns.tprint('\nrun scan-root.js;\nrun loop.js joesguns');
 }
 /*
 

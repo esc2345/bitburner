@@ -1,4 +1,4 @@
-import {copy_files} from "/utils/functions.js";
+import { copy_files, list_servers } from "/utils/functions.js";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -10,7 +10,7 @@ export async function main(ns) {
   };
   try {
     //mults = ns.getBitNodeMultipliers();
-  } catch (e) {}
+  } catch (e) { }
   ns.write('/temp/bitnode.txt', JSON.stringify(mults), 'w');
 
   let servers = list_servers(ns);

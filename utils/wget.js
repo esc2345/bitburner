@@ -18,7 +18,7 @@ export async function main(ns) {
     'utils/startup1.js'
   ]
   for (let f of files) {
-    let uri = githubBase + f;
-    ns.wget(uri, 'home', f);
+    let url = githubBase + f;
+    await ns.wget(url, f);
   }
 }
