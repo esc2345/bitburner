@@ -1,15 +1,15 @@
-import {list_servers, copy_files} from "/utils/functions.js";
+import { copy_files, list_servers } from "/utils/functions.js";
 
 function getSpendingMoney(ns) {
   return ns.getServerMoneyAvailable('home') / 5;
 }
-/** @param {NS} ns */
 
+/** @param {NS} ns */
 export async function main(ns) {
   let serverNames = [];
   let ram = 32;
   let maxNum = ns.getPurchasedServerLimit();
-  for (let i=0; i < maxNum; i++) {
+  for (let i = 0; i < maxNum; i++) {
     while (getSpendingMoney(ns) < ns.getPurchasedServerCost(ram)) {
       await ns.sleep(5000);
     }
@@ -22,7 +22,7 @@ export async function main(ns) {
   }
 
   if (length.serverNames == 0)
-  serverNames = list_servers(ns).filter(s => s.indexOf('home-') == 0);
+    serverNames = list_servers(ns).filter(s => s.indexOf('home-') == 0);
   let cost;
   do {
     ram *= 2;

@@ -105,12 +105,19 @@ export async function main(ns) {
       const s = ns.getServer(name);
       let serverMem = (s.maxRam - s.ramUsed);
       if (s.hostname == 'home')
-        serverMem -= 1024;
+        serverMem -= 6;
+      if (['omega-net',
+        'iron-gym',
+        'phantasy',
+        'zer0',
+        'neo-net',
+        'max-hardware'].includes(s.hostname)) continue;
       let n = Math.floor(serverMem / mem);
       n = Math.min(n, threads);
       let time = ns.getWeakenTime(t.hostname);
       if (n > 0 && ns.exec(script, s.hostname, n, t.hostname, time)) {
         threads -= n;
+        await ns.sleep(SLEEP_TIME);
       }
       if (threads <= 0) {
         break;
@@ -127,7 +134,6 @@ export async function main(ns) {
     let numServers = ns.peek(1);
     if (numServers == 'NULL PORT DATA') { numServers = 0; }
     if (numServers > servers.length) {
-      ns.tprint(`target: ${t.hostname}, reloading servers`);
       servers = list_servers(ns).filter(s => ns.getServer(s).hasAdminRights);
     }
     await ns.sleep(SLEEP_TIME);
@@ -183,18 +189,3 @@ getWeakenEffect
 https://github.com/bitburner-official/bitburner-src/blob/dev/src/Netscript/NetscriptHelpers.tsx
   hack raise security level by 0.002 * threads
 */
-
-/**
- * @param {AutocompleteData} data - context about the game, useful when autocompleting
- * @param {string[]} args - current arguments, not including "run script.js"
- * @returns {string[]} - the array of possible autocomplete options
- */
-export function autocomplete(data, args) {
-  // Example: Suggest server names based on user input
-  if (args.length === 1) {
-    return data.servers; // Suggest all server names
-  } else if (args.length === 2 && args[0] === "--target") {
-    return data.servers; // Suggest server names for the --target flag
-  }
-  return []; // No suggestions if no relevant input
-}

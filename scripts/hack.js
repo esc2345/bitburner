@@ -9,6 +9,6 @@ export async function main(ns) {
     return;
   }
   let target = args._[0];
-  let delay = Math.max(1, args._[1] - ns.getHackTime(target));
+  let delay = Math.max(1, args._[1] * .75);
   await ns.hack(target, {"additionalMsec": delay});
 }

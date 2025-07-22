@@ -9,6 +9,6 @@ export async function main(ns) {
     return;
   }
   let target = args._[0];
-  let delay = Math.max(1, args._[1] - ns.getGrowTime(target));
+  let delay = Math.max(1, args._[1] * 0.2);
   await ns.grow(target, {"additionalMsec": delay});
 }
