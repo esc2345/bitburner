@@ -1,90 +1,15 @@
-import { list_servers } from "utils/functions.js";
+import { list_servers, estimate_grow_cycles, estimate_hack_percent } from "utils/functions.js";
 
-const MEM_W = 1.75, MEM_H = 1.75, MEM_G = 1.8;
+const MEM_W = 1.75, MEM_G = 1.75, MEM_H = 1.70;
 const WEAKEN_EFFECT = 0.05, GROW_EFFECT = 2 * 0.002, HACK_EFFECT = 0.002;
 const SLEEP_TIME = 30;
-var MULTS;
 
-class Action {
-  static validActions = ['weaken', 'hack', 'grow'];
-  constructor(a, t) {
-    this.action;
-    this.threads;
-
-    if (Action.validActions.includes(a) && Number.isFinite(t)) {
-      this.action = a;
-      this.threads = t;
-    } else {
-      throw new Error(`Invalid parameters: (${a}, ${t})`);
-    }
-  }
-  getType() {
-    return this.action;
-  }
-  setThreads(n) {
-    this.threads = n;
-    return this;
-  }
-  getExecInfo() {
-    switch (this.action) {
-      case 'weaken':
-        return ['scripts/weaken.js', MEM_W, this.threads];
-      case 'grow':
-        return ['scripts/grow.js', MEM_G, this.threads];
-      case 'hack':
-        return ['scripts/hack.js', MEM_H, this.threads];
-    }
-  }
-  static getActions(ns, target, skipWG = true) {
-    let actions = [];
-    let deltaSecurity = target.hackDifficulty - target.minDifficulty;
-    let threads = Math.floor(deltaSecurity / WEAKEN_EFFECT);
-    if (threads > 0 && !skipWG) {
-      actions.push(new Action('weaken', threads));
-    }
-    if ((target.moneyAvailable / target.moneyMax) < 0.9 && !skipWG) {
-      let g = Math.max(1, estimateGrowThreads(ns, target));
-      let w = Math.max(1, Math.ceil(g * GROW_EFFECT / WEAKEN_EFFECT));
-      actions.push(new Action('grow', g));
-      actions.push(new Action('weaken', w));
-    }
-    if (actions.length == 0) {
-      let h = 1;
-      let g = Math.max(1,
-        Math.floor((WEAKEN_EFFECT - (HACK_EFFECT * h)) / GROW_EFFECT)
-      );
-      let w = 1;
-      actions.push(new Action('hack', h));
-      actions.push(new Action('grow', g));
-      actions.push(new Action('weaken', w));
-    }
-    return actions.reverse();
-  }
+function getServers(ns) {
+  return list_servers(ns).filter(s => ns.getServer(s).hasAdminRights);
 }
-
-
-
-function estimateGrowThreads(ns, target) {
-  const adjGrowthLog = Math.min(
-    Math.log1p(0.03 / target.minDifficulty),
-    0.00349388925425578);
-  const adjServerGrowth = (target.serverGrowth / 100) * MULTS.ServerGrowthRate;
-  const player = ns.getPlayer();
-  const coreBonus = 1 + (target.cpuCores - 1) / 16;
-  const growThreads = Math.floor(WEAKEN_EFFECT / GROW_EFFECT); // weaken : grow
-  const serverGrowthLog = adjGrowthLog * adjServerGrowth *
-    player.mults.hacking_grow * coreBonus * growThreads;
-  const logServerGrowthRate = Math.log(Math.max(Math.exp(serverGrowthLog), 1));
-  const logMoneyRatio = Math.log(target.moneyMax / target.moneyAvailable)
-  const growCycles = Math.ceil(logMoneyRatio / logServerGrowthRate);
-  return Math.ceil(growThreads * growCycles);
-}
-
-
 
 /** @param {NS} ns **/
 export async function main(ns) {
-  MULTS = JSON.parse(ns.read('/temp/bitnode.txt'));
   const args = ns.flags([['h', false]]);
   const t = ns.getServer(args._[0]);
   if (t.hostname == 'home' || t.moneyMax == 0) {
@@ -92,97 +17,76 @@ export async function main(ns) {
     return;
   }
 
-  let actions = Action.getActions(ns, t, false);
-  let servers = list_servers(ns).filter(
-    s => ns.getServer(s).hasAdminRights);
+  let tasks = [];
+  if (t.hackDifficulty > t.minDifficulty) {
+    tasks.push({
+      'type': 'weaken',
+      'threads': Math.ceil((t.hackDifficulty - t.minDifficulty) / WEAKEN_EFFECT)
+    });
+  }
+  if (t.moneyAvailable < t.moneyMax) {
+    const threads = Math.floor(WEAKEN_EFFECT / GROW_EFFECT); // weaken : grow
+    const cycles = estimate_grow_cycles(ns, t, t.moneyMax / t.moneyAvailable, threads);
+    //ns.tprint(`grow cycles: ${cycles} ${estimate_grow_cycles(ns, t, 1)}`);
+    //ns.tprint(ns.growthAnalyze(t.hostname, t.moneyMax/t.moneyAvailable));
+    for (let i = 0; i < cycles; i++) {
+      tasks.push({ 'type': 'grow', 'threads': threads });
+      tasks.push({ 'type': 'weaken', 'threads': 1 });
+    }
+  }
+  //ns.tprint(tasks);
+  tasks.reverse();
 
-  let getActionsCount = 1;
+  let servers = getServers(ns);
+  let serverIndex = 0;
 
   do {
-    let action = actions.pop();
-    let [script, mem, threads] = action.getExecInfo();
-    for (const name of servers) {
-      const s = ns.getServer(name);
-      let serverMem = (s.maxRam - s.ramUsed);
-      if (s.hostname == 'home')
-        serverMem -= 1024;
-      let n = Math.floor(serverMem / mem);
-      n = Math.min(n, threads);
-      let time = ns.getWeakenTime(t.hostname);
-      if (n > 0 && ns.exec(script, s.hostname, n, t.hostname, time)) {
-        threads -= n;
+    const task = tasks.pop();
+    if (task !== undefined) {
+      let script, mem, threads = task.threads;
+      switch (task.type) {
+        case 'weaken':
+          script = 'scripts/weaken.js'; mem = MEM_W; break;
+        case 'grow':
+          script = 'scripts/grow.js'; mem = MEM_G; break;
+        case 'hack':
+          script = 'scripts/hack.js'; mem = MEM_H; break;
+        default:
+          throw `invalid type: ${task}`;
       }
-      if (threads <= 0) {
-        break;
+      while (threads > 0) {
+        const s = ns.getServer(servers[serverIndex]);
+        let serverMem = (s.maxRam - s.ramUsed);
+        if (s.hostname == 'home')
+          serverMem -= 8;
+        const n = Math.min(Math.floor(serverMem / mem), threads);
+        const time = ns.getWeakenTime(t.hostname);
+        if (n > 0 && ns.exec(script, s.hostname, n, t.hostname, time))
+          threads -= n;
+        serverIndex++;
+        if (serverIndex >= servers.length) {
+          serverIndex = 0;
+          if (ns.peek(1) != 'NULL PORT DATA' && ns.peek(1) > servers.length) {
+            ns.tprint(`target: ${t.hostname}, reloading servers`);
+            servers = getServers(ns);
+          }
+          await ns.sleep(SLEEP_TIME * 10);
+        }
       }
+      await ns.sleep(SLEEP_TIME);
     }
-    if (threads > 0) {
-      actions.push(action.setThreads(threads));
+    if (tasks.length == 0) {
+      const hackPct = estimate_hack_percent(ns, t);
+      const gThreads = estimate_grow_cycles(ns, t, 1 / (1 - hackPct), 1);
+      const wThreads = Math.ceil((gThreads * GROW_EFFECT + HACK_EFFECT) / WEAKEN_EFFECT);
+      tasks.push({ 'type': 'weaken', 'threads': wThreads });
+      tasks.push({ 'type': 'grow', 'threads': gThreads });
+      tasks.push({ 'type': 'hack', 'threads': 1 });
     }
-    if (actions.length <= 0) {
-      for (let a of Action.getActions(ns, t, (getActionsCount++ % 20))) {
-        actions.push(a);
-      }
-    }
-    let numServers = ns.peek(1);
-    if (numServers == 'NULL PORT DATA') { numServers = 0; }
-    if (numServers > servers.length) {
-      ns.tprint(`target: ${t.hostname}, reloading servers`);
-      servers = list_servers(ns).filter(s => ns.getServer(s).hasAdminRights);
-    }
-    await ns.sleep(SLEEP_TIME);
-  } while (actions.length > 0);
+  } while (tasks.length > 0)
 }
-/*
 
-  s = ns.getServer(serverName);
-  t = ns.getServer(targetName);
-  const player = ns.getPlayer();
 
-  const maxActions = Math.floor(ns.getWeakenTime(t.hostname) / SLEEP_TIME) - 1;
-  const memPerAction = (s.maxRam - s.ramUsed) / maxActions;
-  const w = Math.floor(memPerAction / MEM_W);
-
-  const coreBonus = 1 + (s.cpuCores - 1) / 16;
-  const weakenDelta = 0.05 * coreBonus * MULTS.ServerWeakenRate; // weaken effect
-  const g = Math.floor(w * weakenDelta / .004); // grow effect
-
-  const adjGrowLog = Math.min(Math.log1p(0.03 / minDifficulty), 0.00349388925425578);
-  const adjSGrow = (t.serverGrowth / 100) * MULTS.ServerGrowthRate;
-  const sGrowLog = adjGrowLog * adjSGrow * player.MULTS.hacking_grow * coreBonus * g;
-  const sGrowRate = Math.max(Math.exp(sGrowLog), 1);
-
-  const growMoney = t.moneyMax / sGrowRate;
-
-  const difficultyMult = (100 - t.hackDifficulty) / 100;
-  const skillMult = (player.skills.hacking - (t.requiredHackingSkill - 1))
-    / player.skills.hacking;
-  const hackRate = (difficultyMult * skillMult *
-    player.MULTS.hacking_money * MULTS.ScriptHackMoney) / 240;
-  const hackMoney = t.moneyMax * Math.min(1, hackRate);
-
-  const h = Math.floor(growMoney / hackMoney);
-
-}
-/*
-https://github.com/bitburner-official/bitburner-src/blob/dev/src/Hacking.ts
-hack money % - calculatePercentMoneyHacked(server, person);
-calculateHackingTime, calculateGrowTime, calculateWeakenTime
-  weakenTime = 4 * hackTime
-  growthTime = 3.2 * hackTime
-
-https://github.com/bitburner-official/bitburner-src/blob/dev/src/Server/formulas/grow.ts
-grow % - calculateServerGrowth(server, threads, person, cores);
-grow amount - calculateGrowMoney(server, threads, person, cores);
-
-https://github.com/bitburner-official/bitburner-src/blob/dev/src/Server/ServerHelpers.ts
-getWeakenEffect
-  weaken lower security level by 0.05 * threads * (1 + (cores - 1) / 16) * currentNodeMults.ServerWeakenRate
-  grow raise security level by 2 * 0.002 * threads
-
-https://github.com/bitburner-official/bitburner-src/blob/dev/src/Netscript/NetscriptHelpers.tsx
-  hack raise security level by 0.002 * threads
-*/
 
 /**
  * @param {AutocompleteData} data - context about the game, useful when autocompleting
