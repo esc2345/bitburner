@@ -16,7 +16,8 @@ export async function main(ns) {
     'utils/1.js',
     'utils/1a.js',
     'utils/functions.js',
-    'utils/generate-wget.js'
+    'utils/generate-wget.js',
+    'utils/wget.js'
   ]
   for (let f of files) {
     let url = githubBase + f;

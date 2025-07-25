@@ -8,17 +8,19 @@ run start.js
 
 
 
-* Learn algorithms at rothman university until hack level 10
-* scan-root and loop joesguns
-* Train combat skills until level 40
-* Mug until $200k and buy tor router
-* Mug until $500k and buy brutessh
-* Mug until $1.010m and upgrade home server
-* Learn algorithms until hack 60
+* Learn algorithms at rothman university until hack level 60 (~5.5 mins)
+* @ hack level 10, scan-root and loop joesguns
+* Train dex & agi skills until level 25 (~2 mins)
+* Shoplift until $2m (~6 mins)
+* Buy tor router, brutessh, upgrade home server
 * scan-root and backdoor CSEC
-* Hack for CSEC until 18.750k rep
-* Hack for Tian Di Hui until 6.250k rep
+* Hack for CSEC until 18.750k rep (~5h 50 mins)
+* Hack for Tian Di Hui until 6.250k rep (~1h 45mins)
 * Buy Tian Di Hui augmentations: S.N.A, ADR-V1
 * Buy all CSEC augmentations
-* buy -a
-* scan-root and backdoor avmnite-04h
+
+* Learn algorithms at rothman university until hack level 220 (~ mins)
+* buy -a, scan-root, backdoor avmnite-04h
+* Hack for NiteSec until rep 
+
+
