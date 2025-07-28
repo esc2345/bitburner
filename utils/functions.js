@@ -57,7 +57,7 @@ export function estimate_grow_cycles(ns, target, ratio, threads, cores = 1) {
   const serverGrowthLog =
     adjGrowthLog * adjServerGrowth * player.mults.hacking_grow * coreBonus * threads;
   const logServerGrowthRate = Math.log(Math.max(Math.exp(serverGrowthLog), 1));
-  return Math.ceil(Math.log(ratio) / logServerGrowthRate);
+  return 1 + Math.ceil(Math.log(ratio) / logServerGrowthRate);
 }
 
 export function estimate_hack_percent(ns, server) {

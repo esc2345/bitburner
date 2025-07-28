@@ -32,23 +32,11 @@ function root(ns, serverName) {
 
 /** @param {NS} ns */
 export async function main(ns) {
-  const args = ns.flags([['show', false]]);
   const servers = list_servers(ns);
   for (let serverName of servers.filter(s => !ns.getServer(s).hasAdminRights))
-    root(ns, serverName, args.showUnrooted);
+    root(ns, serverName);
   let numRooted = servers.filter(s => ns.getServer(s).hasAdminRights).length;
   ns.clearPort(1);
   ns.writePort(1, numRooted);
   ns.tprint(`servers = ${servers.length}, rooted = ${numRooted}`);
-  if (args.show) {
-    let unrooted = [];
-    for (let serverName of servers.filter(s => !ns.getServer(s).hasAdminRights)) {
-      const s = ns.getServer(serverName);
-      unrooted.push([serverName, s.requiredHackingSkill, s.numOpenPortsRequired]);
-    }
-    ns.tprint('not rooted:')
-    for (let row of unrooted.sort((a, b) => a[1] - b[1])) {
-      ns.tprint(`  ${row[0].padEnd(20)} lvl: ${row[1]} ports: ${row[2]}`);
-    }
-  }
 }

@@ -4,7 +4,7 @@ export async function main(ns) {
   const files = [
     'buy-servers.js',
     'connect.js',
-    'loop.js',
+    'prep.js',
     'scan-root.js',
     'scripts/grow.js',
     'scripts/hack.js',
@@ -17,7 +17,8 @@ export async function main(ns) {
     'utils/1a.js',
     'utils/functions.js',
     'utils/generate-wget.js',
-    'utils/wget.js'
+    'utils/wget.js',
+    'z-servers.js'
   ]
   for (let f of files) {
     let url = githubBase + f;
