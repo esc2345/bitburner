@@ -18,6 +18,7 @@ export async function main(ns) {
     'utils/functions.js',
     'utils/generate-wget.js',
     'utils/wget.js',
+    'z-player.js',
     'z-servers.js'
   ]
   for (let f of files) {

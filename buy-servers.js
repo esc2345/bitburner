@@ -32,6 +32,7 @@ export async function main(ns) {
         await ns.sleep(5000);
       }
       ns.upgradePurchasedServer(name, ram);
+      // ns.exec('/scripts/share.js', name, Math.floor(ram / 4));
     }
     await ns.sleep(500);
   } while (cost < Infinity);

@@ -74,24 +74,16 @@ async function prep(ns, targetServer) {
 
 
 async function prepAll(ns) {
-  let ready = new Set();
-  let targets = getServers(ns).sort((a, b) =>
-    ns.getServer(a).requiredHackingSkill - ns.getServer(b).requiredHackingSkill);
-  let targetIndex = 0;
-  while (targetIndex < targets.length) {
-    const name = targets[targetIndex++];
-    if (ready.has(name) || name.indexOf('home') == 0) {
-      continue;
-    } else {
-      ns.tprint(name);
-      await prep(ns, ns.getServer(name));
-    }
-    if (ns.peek(1) != 'NULL PORT DATA' && ns.peek(1) > targets.length) {
-      ns.tprint('reload target list');
-      targets = getServers(ns).sort((a, b) =>
-        ns.getServer(a).requiredHackingSkill - ns.getServer(b).requiredHackingSkill);
-      targetIndex = 0;
-    }
+  let targets = getServers(ns)
+    .filter(name => {
+      const t = ns.getServer(name);
+      return t.hasAdminRights && name.indexOf('home') != 0 && t.moneyMax && t.moneyMax > 0
+      })
+    .sort((a, b) => ns.getServer(a).requiredHackingSkill - ns.getServer(b).requiredHackingSkill);
+  ns.tprint(`(${ns.pid}) ${targets}`);
+  for (const name of targets) {
+    ns.tprint(`(${ns.pid}) ${name}`);
+    await prep(ns, ns.getServer(name));
   }
 }
 
@@ -122,7 +114,7 @@ USAGE ${ns.getScriptName()} target_name --all? --loop? `);
     return;
   }
   if (args.all) {
-    ns.tprint('prepping all servers');
+    ns.tprint(`(${ns.pid}) prepping all servers`);
     await prepAll(ns);
   }
   if (args._.length > 0) {
@@ -131,10 +123,10 @@ USAGE ${ns.getScriptName()} target_name --all? --loop? `);
       ns.tprint('invalid target');
       return;
     } else {
-      ns.tprint(`prepping ${t.hostname}`);
+      ns.tprint(`(${ns.pid}) prepping ${t.hostname}`);
       await prep(ns, t);
       if (args.loop) {
-        ns.tprint(`hacking ${t.hostname}`);
+        ns.tprint(`(${ns.pid}) hacking ${t.hostname}`);
         await hackLoop(ns, t);
       }
     }
