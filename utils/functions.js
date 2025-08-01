@@ -1,3 +1,5 @@
+import FILENAME from "/utils/filenames.js";
+
 function scan(ns, parent, server, list) {
   const children = ns.scan(server);
   for (let c of children) {
@@ -18,9 +20,6 @@ export function list_servers(ns) {
 export function copy_files(ns, dest) {
   let files = ns.ls('home', 'scripts/');
   files.push('connect.js');
-  files.push('bitnode.txt');
-  files.push('loop.js');
-  files.push('utils.js');
   ns.scp(files, dest, 'home');
 }
 
@@ -46,7 +45,7 @@ https://github.com/bitburner-official/bitburner-src/blob/dev/src/Netscript/Netsc
 */
 
 export function estimate_grow_cycles(ns, target, ratio, threads, cores = 1) {
-  const MULTS = JSON.parse(ns.read('/temp/bitnode.txt'));
+  const MULTS = JSON.parse(ns.read(FILENAME.bitnode));
   const adjGrowthLog = Math.min(
     Math.log1p(0.03 / target.minDifficulty),
     0.00349388925425578
@@ -62,7 +61,7 @@ export function estimate_grow_cycles(ns, target, ratio, threads, cores = 1) {
 
 export function estimate_hack_percent(ns, server) {
   // expressed in decimal form 1.00 = 100%
-  const MULTS = JSON.parse(ns.read('/temp/bitnode.txt'));
+  const MULTS = JSON.parse(ns.read(FILENAME.bitnode));
   const person = ns.getPlayer();
   const difficultyMult = (100 - server.hackDifficulty) / 100;
   const skillMult = (person.skills.hacking - (server.requiredHackingSkill - 1)) / person.skills.hacking;

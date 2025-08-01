@@ -95,7 +95,7 @@ export async function main(ns) {
       ` ${(Math.floor(secs / 60)).toFixed(0).padStart(2)}m ${(secs % 60).toFixed(0).padStart(2)}s,` +
       //` ${cycles.toString().padStart(3)}` +
       //` (${growCycles.toString().padStart(3)})` +
-      ` ${eps.toFixed(2).padStart(7)}` +
+      ` ${ns.formatNumber(eps).padStart(8)}` +
       //`  \$${ns.formatNumber(moneyMax).padStart(8)}` +
       ` ${maxRam.toString().padStart(3)}GB`
       //` security ${Math.round(hackDifficulty)}/${minDifficulty}`

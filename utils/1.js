@@ -1,4 +1,5 @@
 import { copy_files, list_servers } from "/utils/functions.js";
+import FILENAME from "/utils/filenames.js";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -9,7 +10,7 @@ export async function main(ns) {
     "ServerWeakenRate": 1.0,
     "HackingSpeedMultiplier": 1.0
   };
-  ns.write('/temp/bitnode.txt', JSON.stringify(mults), 'w');
+  ns.write(FILENAME.bitnode, JSON.stringify(mults), 'w');
 
   if (ns.getServerMaxRam('home') > 16){
     ns.run('/utils/1a.js');

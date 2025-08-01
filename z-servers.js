@@ -2,7 +2,7 @@ import { list_servers } from "utils/functions.js";
 
 
 function estimateGrow(ns, target, person, ratio, threads, cores = 1) {
-  const MULTS = JSON.parse(ns.read('/temp/bitnode.txt'));
+  const MULTS = JSON.parse(ns.read('/temp/bitnode.json'));
   const adjGrowthLog = Math.min(
     Math.log1p(0.03 / target.minDifficulty),
     0.00349388925425578
@@ -17,7 +17,7 @@ function estimateGrow(ns, target, person, ratio, threads, cores = 1) {
 
 function estimateHackPct(ns, server, person) {
   // expressed in decimal form 1.00 = 100%
-  const MULTS = JSON.parse(ns.read('/temp/bitnode.txt'));
+  const MULTS = JSON.parse(ns.read('/temp/bitnode.json'));
   const difficultyMult = (100 - server.minDifficulty) / 100;
   const skillMult = (person.skills.hacking - (server.requiredHackingSkill - 1)) / person.skills.hacking;
   const percentMoneyHacked =
@@ -26,7 +26,7 @@ function estimateHackPct(ns, server, person) {
 }
 
 function estimateWeakenTime(ns, server, person) {
-  const MULTS = JSON.parse(ns.read('/temp/bitnode.txt'));
+  const MULTS = JSON.parse(ns.read('/temp/bitnode.json'));
   const { minDifficulty, requiredHackingSkill } = server;
   const difficultyMult = requiredHackingSkill * minDifficulty;
 
@@ -106,7 +106,7 @@ export async function main(ns) {
       //` ${row.baseHack.toString().padStart(2)}` +
       //` ${row.currentHack.toFixed(3).padStart(6)}` +
       //` ${row.minHack.toString().padStart(2)}` +
-      ` ${row.eps.toFixed(2).padStart(8)}` +
+      ` ${ns.formatNumber(row.eps).padStart(8)}` +
       ` \$${ns.formatNumber(row.hackMoney).padStart(8)}`);
   }
 }

@@ -15,7 +15,7 @@ best university: ZB in Volhaven
 
 Singularity interface - source-file 4
 
-joesguns, phantasy
+joesguns, phantasy, catalyst. applied-energetics, 4sigma, omnitek, megacorp, blade, ecorp
 
 ---
 | directory | comments |
@@ -24,11 +24,34 @@ joesguns, phantasy
 | temp/ | temporary files created and read by scripts |
 | utils/ | code used by other script files |
 
+steps:
+1. get list of servers (workers) for running weaken/grow/hack scripts
+2. weaken target to min security (batch of weaken)
+3. grow target to max $ (batches of grow/weaken)
+4. keep running hack/grow/weaken against target (batch of hack/grow/weaken)
 
-Sector-12 CashRoot Starter Kit 12.5k rep $125m
-Tian Di Hui S.N.A 6.25k rep $30m
-Tian Di Hui ADR-V1 3.750 rep $ 17.5m
-NeuroLink
+notes:
+* reload list of servers when the number or servers changes
+* retain batches when closing/loading game
+* separate JSON and execute script instance for each target
+
+scripts / classes:
+* batch (type, target, array of tasks & threads)
+* portnumbers (ports used to coordinate across scripts)
+  * number of rooted servers
+* filenames (static variables for filenames)
+* schedule (creates array of batches, saves to file, calls execute on file)
+  * weaken target
+  * grow target
+  * hack target
+* execute (runs batches and tasks)
+
+
+augmentations order:
+* Sector-12 CashRoot Starter Kit 12.5k rep $125m
+* Tian Di Hui S.N.A 6.25k rep $30m
+* Tian Di Hui ADR-V1 3.750 rep $ 17.5m
+* NeuroLink
 
 * Learn algorithms at rothman university until hack level 60 (~5 mins 30 sec)
 * @ hack level 10, kill scripts, scan-root, and prep/loop joesguns
