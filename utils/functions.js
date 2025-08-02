@@ -1,4 +1,4 @@
-import FILENAME from "/utils/filenames.js";
+import { FNAMES } from "/utils/constants.js";
 
 function scan(ns, parent, server, list) {
   const children = ns.scan(server);
@@ -11,8 +11,9 @@ function scan(ns, parent, server, list) {
 }
 
 export function list_servers(ns) {
-  let list = ['home'];
+  let list = [];
   scan(ns, '', 'home', list);
+  list.push('home');
   return list;
 }
 
@@ -45,28 +46,29 @@ https://github.com/bitburner-official/bitburner-src/blob/dev/src/Netscript/Netsc
 */
 
 export function estimate_grow_cycles(ns, target, ratio, threads, cores = 1) {
-  const MULTS = JSON.parse(ns.read(FILENAME.bitnode));
+  const MULTS = JSON.parse(ns.read(FNAMES.bitnode));
   const adjGrowthLog = Math.min(
     Math.log1p(0.03 / target.minDifficulty),
     0.00349388925425578
   );
   const adjServerGrowth = (target.serverGrowth / 100) * MULTS.ServerGrowthRate;
-  const player = ns.getPlayer();
+  const playerHackMults = ns.getHackingMultipliers();
   const coreBonus = 1 + (cores - 1) / 16;
   const serverGrowthLog =
-    adjGrowthLog * adjServerGrowth * player.mults.hacking_grow * coreBonus * threads;
+    adjGrowthLog * adjServerGrowth * playerHackMults.growth * coreBonus * threads;
   const logServerGrowthRate = Math.log(Math.max(Math.exp(serverGrowthLog), 1));
   return 1 + Math.ceil(Math.log(ratio) / logServerGrowthRate);
 }
 
 export function estimate_hack_percent(ns, server) {
   // expressed in decimal form 1.00 = 100%
-  const MULTS = JSON.parse(ns.read(FILENAME.bitnode));
-  const person = ns.getPlayer();
+  const MULTS = JSON.parse(ns.read(FNAMES.bitnode));
+  const playerHackMults = ns.getHackingMultipliers();
   const difficultyMult = (100 - server.hackDifficulty) / 100;
-  const skillMult = (person.skills.hacking - (server.requiredHackingSkill - 1)) / person.skills.hacking;
+  const playerHackLevel = ns.getHackingLevel();
+  const skillMult = (playerHackLevel - (server.requiredHackingSkill - 1)) / playerHackLevel;
   const percentMoneyHacked =
-    (difficultyMult * skillMult * person.mults.hacking_money * MULTS.ScriptHackMoney) / 240;
+    (difficultyMult * skillMult * playerHackMults.money * MULTS.ScriptHackMoney) / 240;
   return Math.min(1, Math.max(percentMoneyHacked, 0));
 }
 
