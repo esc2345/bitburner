@@ -1,5 +1,18 @@
 import { list_servers, estimate_hack_percent, estimate_grow_cycles } from "/utils/functions.js";
 
+/**
+ * @param {AutocompleteData} data - context about the game, useful when autocompleting
+ * @param {string[]} args - current arguments, not including "run script.js"
+ * @returns {string[]} - the array of possible autocomplete options
+ */
+export function autocomplete(data, args) {
+  if (args.length >= 1 && (args[0] == '--sort' || args[0] == '-s')) {
+    return ['time', 'difficulty', 'maxmoney']; // Suggest all server names
+  }
+  return [];
+}
+
+
 /** @param {NS} ns */
 export async function main(ns) {
   const args = ns.flags([['sort', ['time', 'difficulty', 'maxmoney']], ['s', ['time', 'difficulty', 'maxmoney']]]);

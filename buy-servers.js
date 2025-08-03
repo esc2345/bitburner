@@ -41,8 +41,8 @@ export async function main(ns) {
         await ns.sleep(5000);
       }
       ns.upgradePurchasedServer(name, ram);
-      ns.kill('/scripts/share.js', name);
-      ns.exec('/scripts/share.js', name, Math.floor(ram / 4));
+      //ns.kill('/scripts/share.js', name);
+      //ns.exec('/scripts/share.js', name, Math.floor(ram / 4));
       upgradedCount++;
     }
     await ns.sleep(500);

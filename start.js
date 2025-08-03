@@ -11,8 +11,8 @@ alias stats="run stats.js"
 /** @param {NS} ns */
 export async function main(ns) {
   const startupScripts = [
-    'scan-root.js',
-    '/utils/1.js'
+    '/utils/1.js',
+    'scan-root.js'
   ];
   for (let ss of startupScripts) {
     ns.tprint(`startup script: ${ss}`);
@@ -21,4 +21,9 @@ export async function main(ns) {
       await ns.sleep(100);
     }
   }
+  while (ns.getHackingLevel() < 10){
+    await ns.sleep(100);
+  }
+  ns.run('attack.js', 1, 'joesguns');
+  
 }

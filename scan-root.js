@@ -1,11 +1,6 @@
-import { list_servers } from "utils/functions.js";
-import FILENAME from "utils/filenames.js";
-import PORTS from "utils/portnumbers.js";
+import { list_servers } from "/utils/functions.js";
+import { PORTS, FNAMES } from "/utils/constants.js";
 
-const targets = new Set([
-  'joesguns', 'phantasy', 'catalyst', 'applied-energetics', 
-  '4sigma', 'omnitek', 'megacorp', 'blade', 'ecorp'
-]);
 
 function root(ns, serverName) {
   const portTools = new Set();
@@ -33,9 +28,6 @@ function root(ns, serverName) {
     }
     if (ns.nuke(serverName)) {
       ns.tprint(`nuked ${serverName}`);
-      if (targets.has(serverName)){
-        ns.tprint(`hacking ${serverName}`);
-      }
     }
   }
 }
@@ -43,14 +35,15 @@ function root(ns, serverName) {
 /** @param {NS} ns */
 export async function main(ns) {
   const args = ns.flags([['s', false], ['show', false]]);
-  const servers = list_servers(ns).sort((a, b) => ns.getServerRequiredHackingLevel(a) - ns.getServerRequiredHackingLevel(b));
+  const servers = list_servers(ns);
   for (let serverName of servers.filter(s => !ns.hasRootAccess(s)))
     root(ns, serverName);
-  let rooted = servers.filter(s => ns.hasRootAccess(s));
-  ns.write(FILENAME.rootedServers, JSON.stringify(rooted), 'w');
+  const rooted = servers.filter(s => ns.hasRootAccess(s));
+  const available = rooted.filter(s => ns.getServerMaxRam(s) > 0);
+  ns.write(FNAMES.rootedServers, JSON.stringify(available), 'w');
   ns.clearPort(PORTS.numRooted);
-  ns.writePort(PORTS.numRooted, rooted.length);
-  ns.tprint(`servers = ${servers.length}, rooted = ${rooted.length}`);
+  ns.writePort(PORTS.numRooted, available.length);
+  ns.tprint(`servers = ${servers.length}, rooted = ${rooted.length}, available = ${available.length}`);
   if (args.s || args.show) {
     ns.tprint('unrooted:');
     for (const s of servers.filter(s => !ns.hasRootAccess(s))) {
