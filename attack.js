@@ -13,7 +13,7 @@ class TaskRunner {
     this.time = 0;
   }
   makeTasks(ns, loopOnly = false) {
-    this.time = ns.getWeakenTime(this.targetName);
+    this.time = Math.ceil(ns.getWeakenTime(this.targetName));
     const targetServer = ns.getServer(this.targetName);
     // hacking
     const numHacks = 1;
@@ -63,8 +63,8 @@ class TaskRunner {
       }
       while (threads > 0) {
         const s = ns.getServer(this.servers[i]);
-        let ram = s.maxRam - s.ramUsed - 2; //reserving 2GB for connect.js
-        if (s.hostname == 'home') ram -= 6; //reserve 8GB total on home
+        let ram = s.maxRam - s.ramUsed;
+        if (s.hostname == 'home') ram -= 8; //reserve 8GB total on home
         let n = Math.min(threads, Math.floor(ram / mem));
         if (n > 0 && ns.exec(script, s.hostname, n, this.targetName, this.time)) {
           threads -= n;

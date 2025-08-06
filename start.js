@@ -3,10 +3,14 @@
 If browser hangs, load with ?noscripts:
   e.g. https://bitburner-official.github.io/?noscripts
 
-alias buyall="buy BruteSSH.exe;buy FTPCrack.exe;buy relaySMTP.exe;buy HTTPWorm.exe;buy SQLInject.exe"
-alias stats="run stats.js"
-
 */
+
+async function waitForScript(ns, scriptName) {
+  let pid = ns.run(scriptName);
+  while (ns.isRunning(pid)) {
+    await ns.sleep(100);
+  }
+}
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -16,14 +20,16 @@ export async function main(ns) {
   ];
   for (let ss of startupScripts) {
     ns.tprint(`startup script: ${ss}`);
-    let pid = ns.run(ss);
-    while (ns.isRunning(pid)) {
-      await ns.sleep(100);
-    }
+    await waitForScript(ss);
   }
-  while (ns.getHackingLevel() < 10){
-    await ns.sleep(100);
-  }
+
+  while (ns.getHackingLevel() < 10) { await ns.sleep(100); }
+  await waitForScript(ns, 'scan-root.js');
   ns.run('attack.js', 1, 'joesguns');
-  
+
+  ns.run('buy-servers.js');
+
+  while (ns.getWeakenTime('joesguns') > 60000) { await ns.sleep(100); }
+  ns.run('attack.js', 1, 'phantasy');
+
 }
