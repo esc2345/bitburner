@@ -1,8 +1,8 @@
 import { list_servers } from "utils/functions.js";
-
+import { FNAMES } from "utils/constants.js";
 
 function estimateGrow(ns, target, person, ratio, threads, cores = 1) {
-  const MULTS = JSON.parse(ns.read('/temp/bitnode.json'));
+  const MULTS = JSON.parse(ns.read(FNAMES.bitnode));
   const adjGrowthLog = Math.min(
     Math.log1p(0.03 / target.minDifficulty),
     0.00349388925425578
@@ -17,7 +17,7 @@ function estimateGrow(ns, target, person, ratio, threads, cores = 1) {
 
 function estimateHackPct(ns, server, person) {
   // expressed in decimal form 1.00 = 100%
-  const MULTS = JSON.parse(ns.read('/temp/bitnode.json'));
+  const MULTS = JSON.parse(ns.read(FNAMES.bitnode));
   const difficultyMult = (100 - server.minDifficulty) / 100;
   const skillMult = (person.skills.hacking - (server.requiredHackingSkill - 1)) / person.skills.hacking;
   const percentMoneyHacked =
@@ -26,7 +26,7 @@ function estimateHackPct(ns, server, person) {
 }
 
 function estimateWeakenTime(ns, server, person) {
-  const MULTS = JSON.parse(ns.read('/temp/bitnode.json'));
+  const MULTS = JSON.parse(ns.read(FNAMES.bitnode));
   const { minDifficulty, requiredHackingSkill } = server;
   const difficultyMult = requiredHackingSkill * minDifficulty;
 

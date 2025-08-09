@@ -30,7 +30,7 @@ function root(ns, serverName) {
 /** @param {NS} ns */
 export async function main(ns) {
   const args = ns.flags([['s', false], ['show', false]]);
-  
+
   if (ns.fileExists('BruteSSH.exe')) portTools.add('BruteSSH');
   if (ns.fileExists('FTPCrack.exe')) portTools.add('FTPCrack');
   if (ns.fileExists('relaySMTP.exe')) portTools.add('relaySMTP');
@@ -38,19 +38,26 @@ export async function main(ns) {
   if (ns.fileExists('SQLInject.exe')) portTools.add('SQLInject');
 
   const servers = list_servers(ns);
-  for (let serverName of servers.filter(s => !ns.hasRootAccess(s)))
+  for (let serverName of servers.filter(s => !ns.hasRootAccess(s))) {
     root(ns, serverName);
+  }
   const rooted = servers.filter(s => ns.hasRootAccess(s));
-  const available = rooted.filter(s => ns.getServerMaxRam(s) > 0);
-  ns.write(FNAMES.rootedServers, JSON.stringify(available), 'w');
-  ns.clearPort(PORTS.numRooted);
-  ns.writePort(PORTS.numRooted, available.length);
-  ns.tprint(`servers = ${servers.length}, rooted = ${rooted.length}, available = ${available.length}`);
+  const workers = rooted.filter(s => ns.getServerMaxRam(s) > 0);
+  ns.write(FNAMES.workers, JSON.stringify(workers), 'w');
+  ns.clearPort(PORTS.workers);
+  ns.writePort(PORTS.workers, workers.length);
+  const targets = rooted
+    .filter(s => ns.getServerMaxMoney(s) > 0)
+    .sort((a, b) => ns.getServerRequiredHackingLevel(a) - ns.getServerRequiredHackingLevel(b));
+  ns.write(FNAMES.targets, JSON.stringify(targets), 'w');
+  ns.tprint(`servers = ${servers.length}, targets = ${targets.length}, workers = ${workers.length}`);
   if (args.s || args.show) {
-
     ns.tprint(`# port tools: ${portTools.size}, unrooted:`);
-    for (const s of servers.filter(s => !ns.hasRootAccess(s))
-      .sort((a, b) => ns.getServerRequiredHackingLevel(a) - ns.getServerRequiredHackingLevel(b))) {
+    for (
+      const s of servers
+        .filter(s => !ns.hasRootAccess(s))
+        .sort((a, b) => ns.getServerRequiredHackingLevel(a) - ns.getServerRequiredHackingLevel(b))
+    ) {
       ns.tprint(`  ${s.padEnd(20)} ${ns.getServerRequiredHackingLevel(s).toString().padStart(4)} ${ns.getServerNumPortsRequired(s)}`);
     }
   }

@@ -2,7 +2,7 @@
 Port numbers for commnication across scripts
 */
 export class PORTS {
-  static numRooted = 1; // port #1 for number of rooted servers
+  static workers = 1; // port #1 for number of rooted servers
 }
 
 /*
@@ -10,10 +10,12 @@ Filenames used across scripts
 */
 export class FNAMES {
   static bitnode = '/temp/bitnode.json';
-  static rootedServers = '/temp/rooted.json';
+  static workers = '/temp/workers.json';
+  static targets = '/temp/targets.json';
   static weakenScript = '/scripts/weaken.js';
   static growScript = '/scripts/grow.js';
   static hackScript = '/scripts/hack.js';
+  static shareScript = '/scripts/share.js';
 }
 
 /*
@@ -23,4 +25,5 @@ export class MEM {
   static W = 1.75;
   static G = 1.75;
   static H = 1.70;
+  static SHARE = 4.0;
 }

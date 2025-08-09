@@ -3,7 +3,7 @@ export async function main(ns) {
   const fname = 'utils/wget.js';
   const files = [];
   for (let file of ns.ls('home')) {
-    if (file.indexOf('.js') > 0) {
+    if (file.indexOf('.js') > 0 && file.indexOf('.json') < 0) {
       files.push(`'${file}'`);
     }
   }

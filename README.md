@@ -27,21 +27,22 @@ Bitnode 1:
 1. run start.js
 1. Learn algorithms at rothman university until hack level 30 
 1. Train dex & agi until level 30
-1. Rob store until $1m
-1. Buy upgrade home server (8gb)
 1. Rob store until $1.2m
-1. Travel to Ishima
-1. Join Tian Di Hui ($1m, hack 50)
+1. Travel to Ishima, join Tian Di Hui ($1m, hack 50)
+1. Upgrade home server (16gb)
 1. Hack for Tian Di Hui until 6.250k rep
 1. @ hack level 60
     1. Buy tor router, brutessh
     1. scan-root and backdoor CSEC
+1. Kill attack joesguns script & run start.js
 1. Join Sector-12 and Aevum ($40m)
+1. Join Nitesec (hack 220, 2 ports)
+1. Upgrade home server (32gb)
+1. run attack phantasy
 
 1. Hack for Tian Di Hui until 6.250k rep
-1. Hack for CSEC until 10k rep
+1. Hack for CSEC until 3.75k rep
 1. Buy & install augmentations: ($456m)
-    * CSEC Cranial Signal Processors - Gen I 10k rep $70m
     * Tian Di Hui S.N.A 6.25k rep $30m
     * Tian Di Hui ADR-V1 3.750 rep $ 17.5m
     * CSEC BitWire 3.75k rep $10m
@@ -49,15 +50,20 @@ Bitnode 1:
     * CSEC Neurotrainer I 1k rep $4m
 
 
+
+
+
+
+
 1. Learn algorithms at rothman university until hack level 30 
 1. Train dex & agi until level 30
-1. Rob store until $40m
-1. Join Tian Di Hui ($1m, hack 50)
+1. Rob store until $1.2m
+1. Travel to Ishima, join Tian Di Hui ($1m, hack 50)
 1. Buy tor router & brutessh.exe
 1. Join CSEC (hack 60, 1 port)
+1. Rob store until $40m
 1. Join Aevum & Sector-12
 1. Join Nitesec (hack 220, 2 ports)
-1. Upgrade home server x3 (256gb)
 
 1. Hack for Sector-12 until 12.5k rep
 1. Hack for Nitesec until 15k rep
@@ -85,6 +91,7 @@ Bitnode 1:
 1. Buy & install augmentations: ($1.4b)
     * Tian Di Hui Neuroreceptor Management Implant 75k rep $550m
     * Nitesec Neural-Retention Enhancement $250m
+    * CSEC Cranial Signal Processors - Gen I 10k rep $70m
     * Nitesec Cranial Signal Processors - Gen II 18.75k rep $125m
     * Tian Di Hui Nanofiber Weave 37.5k rep $125m
     * Tian Di Hui Nuoptimal Nootropic Injector Implant 5k rep $20m
@@ -99,9 +106,15 @@ Bitnode 1:
 1. Join Nitesec (hack 220, 2 ports)
 1. Join Ishima, New Tokyo, Chongqing ($30m, $20m, $20m)
 1. run buy-servers.js
-1. Hack for Chongqing until 112.5k rep
+1. Hack for Chongqing until 50k rep
+1. Hack for Nitesec until 112.5k rep
 
-    * Chongqing Datajack 112.5k rep $450.000m
+    * Chongqing Neuralstimulator 50k rep, $3b
+    * Nitesec Cranial Signal Processors - Gen III 50k rep $550m
+    * Nitesec Datajack 112.5k rep $450m
+    * Chongqing Neuregen Gene Modification 37.5k rep $375m
+    * Nitesec CRTX42-AA Gene Modification 45k rep $225m
+
 
 1. Hack for Blackhand until 50k rep
 1. Hack for Blackhand until 175k rep

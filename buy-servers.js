@@ -13,7 +13,7 @@ export async function main(ns) {
   ns.disableLog('exec');
   ns.disableLog('kill');
 
-  let ram = 64;
+  let ram = 128;
   let maxNum = ns.getPurchasedServerLimit();
   for (let i = 0; i < maxNum; i++) {
     while (getSpendingMoney(ns) < ns.getPurchasedServerCost(ram)) {
@@ -22,6 +22,7 @@ export async function main(ns) {
     let name = ns.purchaseServer('home', ram);
     if (name != "") {
       copy_files(ns, name);
+      ns.exec('scan-root.js', 'home');
     }
   }
 

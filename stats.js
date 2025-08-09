@@ -30,7 +30,7 @@ export async function main(ns) {
     },
     0
   );
-  ns.tprint(`total memory: ${totalMem}`);
+  ns.tprint(`total memory: ${ns.formatRam(totalMem)}`);
   const maxThreads = totalMem / 1.75;
 
   for (let sName of servers) {

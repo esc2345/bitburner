@@ -4,25 +4,26 @@ import { FNAMES, PORTS, MEM } from "/utils/constants.js";
 var WEAKEN_EFFECT = 0.05, GROW_EFFECT = 2 * 0.002, HACK_EFFECT = 0.002;
 const SLEEPTIME = 30;
 
+
 class TaskRunner {
   constructor(ns, targetName) {
     this.targetName = targetName;
     this.tasks = [];
-    this.loopTasks = [];
     this.servers = [];
     this.time = 0;
   }
-  makeTasks(ns, loopOnly = false) {
+  makeTasks(ns, type = 'all') {
     this.time = Math.ceil(ns.getWeakenTime(this.targetName));
     const targetServer = ns.getServer(this.targetName);
-    // hacking
-    const numHacks = 1;
-    const hackPct = estimate_hack_percent(ns, targetServer);
-    const gThreads = estimate_grow_cycles(ns, targetServer, 1 / (1 - (numHacks * hackPct)), 1);
-    const wThreads = Math.ceil((gThreads * GROW_EFFECT + HACK_EFFECT) / WEAKEN_EFFECT);
-    this.loopTasks = [['weaken', wThreads], ['grow', gThreads], ['hack', numHacks]];
-    if (loopOnly == false) {
+    if (type == 'all' || type == 'hack') {
+      // hacking
+      const hackPct = estimate_hack_percent(ns, targetServer);
+      const numHacks = 1; //Math.min(1, Math.floor(0.05 / hackPct));
+      const gThreads = estimate_grow_cycles(ns, targetServer, 1 / (1 - (numHacks * hackPct)), 1);
+      const wThreads = Math.ceil((gThreads * GROW_EFFECT + HACK_EFFECT) / WEAKEN_EFFECT);
       this.tasks = [['weaken', wThreads], ['grow', gThreads], ['hack', numHacks]];
+    }
+    if (type == 'all' || type == 'prep') {
       // growing
       if (targetServer.moneyAvailable < targetServer.moneyMax) {
         const threads = Math.floor(WEAKEN_EFFECT / GROW_EFFECT);
@@ -43,45 +44,50 @@ class TaskRunner {
     return this;
   }
   getServers(ns) {
-    const portData = ns.peek(PORTS.numRooted);
+    const portData = ns.peek(PORTS.workers);
     if (portData != 'NULL PORT DATA' && portData > this.servers.length) {
-      this.servers = JSON.parse(ns.read(FNAMES.rootedServers))
-      ns.tprint(`(${ns.pid}) ${this.targetName} : servers = ${this.servers.length}`)
+      this.servers = JSON.parse(ns.read(FNAMES.workers));
+      ns.tprint(`(${ns.pid}) ${this.targetName.padEnd(20)}: servers = ${this.servers.length}`)
     }
     return this;
   }
   async start(ns, loop = true) {
-    let i = 0;
-    do {
+    let serverIndex = 0;
+    let delay = this.time;
+    while (this.tasks.length > 0) {
       const task = this.tasks.pop();
       let script, mem, threads = task[1];
       switch (task[0]) {
         case 'weaken': script = FNAMES.weakenScript; mem = MEM.W; break;
         case 'grow': script = FNAMES.growScript; mem = MEM.G; break;
         case 'hack': script = FNAMES.hackScript; mem = MEM.H; break;
+        case 'share': script = FNAMES.shareScript; mem = MEM.SHARE; break;
         default: throw `Invalid task: ${task}`;
       }
       while (threads > 0) {
-        const s = ns.getServer(this.servers[i]);
+        const s = ns.getServer(this.servers[serverIndex]);
         let ram = s.maxRam - s.ramUsed;
-        if (s.hostname == 'home') ram -= 8; //reserve 8GB total on home
+        if (s.hostname == 'home') {
+          ram -= 8; //reserve 8GB total on home
+        }
+        const delay = this.time;
         let n = Math.min(threads, Math.floor(ram / mem));
-        if (n > 0 && ns.exec(script, s.hostname, n, this.targetName, this.time)) {
+        if (n > 0 && ns.exec(script, s.hostname, n, this.targetName, delay)) {
           threads -= n;
         } else {
-          if (++i >= this.servers.length) {
+          if (++serverIndex >= this.servers.length) {
             await ns.sleep(SLEEPTIME * 10);
             this.getServers(ns);
-            i = 0;
+            serverIndex = 0;
           }
         }
       }
+      //delay += SLEEPTIME;
       await ns.sleep(SLEEPTIME);
       if (this.tasks.length <= 0 && loop) {
-          this.tasks = this.loopTasks.slice(0);
-          this.makeTasks(ns, true);
+        this.makeTasks(ns, 'hack');
       }
-    } while (this.tasks.length > 0)
+    }
     return this;
   }
 }
@@ -94,15 +100,22 @@ export async function main(ns) {
     ns.tprint(`weaken, grow, hack a target server\nusage: ${ns.getScriptName()}  target_server_name`);
     return;
   }
-  const t = ns.getServer(args._[0]);
-  if (t.hostname.indexOf('home') == 0 || t.moneyMax == 'undefined' || t.moneyMax <= 0) {
-    throw `Invalid target: ${t.hostname}`;
+  let targets = [args._[0]];
+  let taskType = 'all';
+  if (args._[0] == 'all') {
+    targets = JSON.parse(ns.read(FNAMES.targets));
+    taskType = 'prep';
   }
-
-  let taskRunner = new TaskRunner(ns, t.hostname)
-    .makeTasks(ns)
-    .getServers(ns);
-  await taskRunner.start(ns);
+  for (const name of targets) {
+    const t = ns.getServer(name);
+    if (t.hostname.indexOf('home') == 0 || t.moneyMax == 'undefined' || t.moneyMax <= 0) {
+      continue;
+    }
+    let taskRunner = new TaskRunner(ns, t.hostname)
+      .getServers(ns)
+      .makeTasks(ns, taskType);
+    await taskRunner.start(ns, taskType == 'all');
+  }
 }
 
 

@@ -20,8 +20,15 @@ export function list_servers(ns) {
 
 export function copy_files(ns, dest) {
   let files = ns.ls('home', 'scripts/');
-  files.push('connect.js');
   ns.scp(files, dest, 'home');
+}
+
+
+export async function wait_for_script(ns, scriptName) {
+  let pid = ns.run(scriptName);
+  while (ns.isRunning(pid)) {
+    await ns.sleep(100);
+  }
 }
 
 
