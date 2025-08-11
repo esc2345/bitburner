@@ -1,7 +1,9 @@
 /** @param {NS} ns */
 export async function main(ns) {
   const fname = '/utils/wget.js';
-  const files = ns.ls('home').filter(file => file.indexOf('.js') > 0 && file.indexOf('.json') < 0);
+  const files = ns.ls('home')
+  .filter(file => file.indexOf('.js') > 0 && file.indexOf('.json') < 0)
+  .map((s) => `"${s}"`);
   const template = `/** @param {NS} ns */
 export async function main(ns) {
   const githubBase = 'https://raw.githubusercontent.com/esc2345/bitburner/refs/heads/main/';

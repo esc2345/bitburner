@@ -2,7 +2,8 @@
 Port numbers for commnication across scripts
 */
 export class PORTS {
-  static workers = 1; // port #1 for number of rooted servers
+  static currentNode = 1; // current node
+  static workers = 2; // number of rooted servers
 }
 
 /*
