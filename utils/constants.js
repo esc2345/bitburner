@@ -10,6 +10,9 @@ Filenames used across scripts
 */
 export class FNAMES {
   static bitnode = '/temp/bitnode.json';
+  static augments = '/temp/augments.json';
+  static sourceFiles = '/temp/source-files.json';
+  static hackMults = '/temp/hackMults.json';
   static workers = '/temp/workers.json';
   static targets = '/temp/targets.json';
   static weakenScript = '/scripts/weaken.js';

@@ -2,25 +2,32 @@ import { list_servers } from "/utils/functions.js";
 import { PORTS, FNAMES } from "/utils/constants.js";
 
 
-const portTools = new Set();
-
 function root(ns, serverName) {
+  let count = 0;
+  if (ns.fileExists('BruteSSH.exe')) {
+    ns.brutessh(serverName);
+    count++;
+  }
+  if (ns.fileExists('FTPCrack.exe')) {
+    ns.ftpcrack(serverName);
+    count++;
+  }
+  if (ns.fileExists('relaySMTP.exe')) {
+    ns.relaysmtp(serverName);
+    count++;
+  }
+  if (ns.fileExists('HTTPWorm.exe')) {
+    ns.httpworm(serverName);
+    count++;
+  }
+  if (ns.fileExists('SQLInject.exe')) {
+    ns.sqlinject(serverName);
+    count++;
+  }
+
   if (!ns.hasRootAccess(serverName) &&
-    portTools.size >= ns.getServerNumPortsRequired(serverName) &&
+    count >= ns.getServerNumPortsRequired(serverName) &&
     ns.getHackingLevel() >= ns.getServerRequiredHackingLevel(serverName)) {
-    let count = 0;
-    for (const t of portTools) {
-      if (count >= ns.getServerNumPortsRequired(serverName)) {
-        break;
-      }
-      switch (t) {
-        case 'BruteSSH': ns.brutessh(serverName); count++; break;
-        case 'FTPCrack': ns.ftpcrack(serverName); count++; break;
-        case 'relaySMTP': ns.relaysmtp(serverName); count++; break;
-        case 'HTTPWorm': ns.httpworm(serverName); count++; break;
-        case 'SQLInject': ns.sqlinject(serverName); count++; break;
-      }
-    }
     if (ns.nuke(serverName)) {
       ns.tprint(`nuked ${serverName}`);
     }
@@ -30,12 +37,6 @@ function root(ns, serverName) {
 /** @param {NS} ns */
 export async function main(ns) {
   const args = ns.flags([['s', false], ['show', false]]);
-
-  if (ns.fileExists('BruteSSH.exe')) portTools.add('BruteSSH');
-  if (ns.fileExists('FTPCrack.exe')) portTools.add('FTPCrack');
-  if (ns.fileExists('relaySMTP.exe')) portTools.add('relaySMTP');
-  if (ns.fileExists('HTTPWorm.exe')) portTools.add('HTTPWorm');
-  if (ns.fileExists('SQLInject.exe')) portTools.add('SQLInject');
 
   const servers = list_servers(ns);
   for (let serverName of servers.filter(s => !ns.hasRootAccess(s))) {

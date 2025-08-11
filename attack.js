@@ -45,7 +45,7 @@ class TaskRunner {
   }
   getServers(ns) {
     const portData = ns.peek(PORTS.workers);
-    if (portData != 'NULL PORT DATA' && portData > this.servers.length) {
+    if (this.servers.length == 0 || portData != 'NULL PORT DATA' && portData > this.servers.length ) {
       this.servers = JSON.parse(ns.read(FNAMES.workers));
       ns.tprint(`(${ns.pid}) ${this.targetName.padEnd(20)}: servers = ${this.servers.length}`)
     }

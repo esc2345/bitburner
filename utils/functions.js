@@ -59,7 +59,7 @@ export function estimate_grow_cycles(ns, target, ratio, threads, cores = 1) {
     0.00349388925425578
   );
   const adjServerGrowth = (target.serverGrowth / 100) * MULTS.ServerGrowthRate;
-  const playerHackMults = ns.getHackingMultipliers();
+  const playerHackMults = JSON.parse(ns.read(FNAMES.hackMults));
   const coreBonus = 1 + (cores - 1) / 16;
   const serverGrowthLog =
     adjGrowthLog * adjServerGrowth * playerHackMults.growth * coreBonus * threads;
@@ -70,7 +70,7 @@ export function estimate_grow_cycles(ns, target, ratio, threads, cores = 1) {
 export function estimate_hack_percent(ns, server) {
   // expressed in decimal form 1.00 = 100%
   const MULTS = JSON.parse(ns.read(FNAMES.bitnode));
-  const playerHackMults = ns.getHackingMultipliers();
+  const playerHackMults = JSON.parse(ns.read(FNAMES.hackMults));
   const difficultyMult = (100 - server.hackDifficulty) / 100;
   const playerHackLevel = ns.getHackingLevel();
   const skillMult = (playerHackLevel - (server.requiredHackingSkill - 1)) / playerHackLevel;

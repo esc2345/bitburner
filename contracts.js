@@ -51,7 +51,7 @@ class ContractSolver {
 /** @param {NS} ns */
 export async function main(ns) {
 
-
+/*
   let s = "sigma-cosmetics";
   let f = "contract-964134.cct";
   let type = ns.codingcontract.getContractType(f, s);
@@ -77,7 +77,6 @@ export async function main(ns) {
 
   /* */
 
-  return;
 
   const servers = list_servers(ns).filter(s => s.indexOf("home-") < 0);
   for (const s of servers) {
