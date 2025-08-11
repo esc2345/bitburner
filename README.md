@@ -32,7 +32,7 @@ Hack for Tian Di Hui until 6.25k rep
 Rob store until $40m
 Join Sector-12 & Aevum ($40m)
 Join Nitesec? (hack 220, 2 ports)
-Buy & install augmentations: ($456m)
+Buy & install augmentations: ($203m)
     * Tian Di Hui S.N.A 6.25k rep $30m
     * Tian Di Hui ADR-V1 3.750 rep $17.5m
     * CSEC BitWire 3.75k rep $10m

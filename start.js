@@ -17,7 +17,7 @@ export async function main(ns) {
   switch (currentNode) {
     case 1:
       if (ns.getServerMaxRam('home') < 16) {
-        ns.tprint(' * * * Train dex & agi to 50, shoplift, and upgrade home computer RAM');
+        ns.tprint(' * * * Train dex & agi to 50, shoplift, upgrade home computer RAM, soft reset');
         return
       } else {
         ns.run('/utils/bitnode1.js');
