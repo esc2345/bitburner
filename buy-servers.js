@@ -42,6 +42,6 @@ export async function main(ns) {
         upgradedCount++;
       }
     }
-    await ns.sleep(500);
+    await ns.sleep(5000);
   }
 }

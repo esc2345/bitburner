@@ -12,6 +12,7 @@ export async function main(ns) {
     "scripts/hack.js",
     "scripts/share.js",
     "scripts/weaken.js",
+    "share-all.js",
     "start.js",
     "stats.js",
     "test.js",

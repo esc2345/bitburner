@@ -13,11 +13,12 @@ export async function main(ns) {
     await wait_for_script(ns, s);
   }
   const currentNode = ns.peek(PORTS.currentNode);
-
+  ns.tprint(`current bitnode = ${currentNode}`);
+  
   switch (currentNode) {
     case 1:
       if (ns.getServerMaxRam('home') < 16) {
-        ns.tprint(' * * * Train dex & agi to 50, shoplift, upgrade home computer RAM, soft reset');
+        ns.tprint(' * * * Train dex & agi to 20, shoplift, upgrade home computer RAM, soft reset');
         return
       } else {
         ns.run('/utils/bitnode1.js');

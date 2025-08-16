@@ -53,7 +53,7 @@ export async function main(ns) {
   ns.write(FNAMES.targets, JSON.stringify(targets), 'w');
   ns.tprint(`servers = ${servers.length}, targets = ${targets.length}, workers = ${workers.length}`);
   if (args.s || args.show) {
-    ns.tprint(`# port tools: ${portTools.size}, unrooted:`);
+    ns.tprint(` unrooted:`);
     for (
       const s of servers
         .filter(s => !ns.hasRootAccess(s))

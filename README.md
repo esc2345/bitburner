@@ -4,6 +4,8 @@ wget "https://raw.githubusercontent.com/esc2345/bitburner/refs/heads/main/utils/
 
 run utils/wget.js
 
+run start.js
+
 ---
 
 best gym: Powerhouse in Sector-12
@@ -22,16 +24,23 @@ const targets = new Set([
 https://github.com/afsanchez001/BitburnerRepo/tree/main/OptiRunner
 ---
 
+0. upgrade home computer 
+1. install S.N.A
+2. install CashRoot Starter Kit 
+
+
+
 Train dex & agi to 50
 Rob store until $1.2m
 Travel to Ishima, join Tian Di Hui ($1m, hack 50)
 Buy tor router & brutessh
-Join CSEC (scan-root and backdoor CSEC)
+
+reset 1:
+Join Tian Di Hui ($1m, hack 50)
+Join CSEC (hack 60, 1 port)
 Hack for CSEC until 3.75k rep
 Hack for Tian Di Hui until 6.25k rep
-Rob store until $40m
 Join Sector-12 & Aevum ($40m)
-Join Nitesec? (hack 220, 2 ports)
 Buy & install augmentations: ($203m)
     * Tian Di Hui S.N.A 6.25k rep $30m
     * Tian Di Hui ADR-V1 3.750 rep $17.5m
@@ -40,19 +49,11 @@ Buy & install augmentations: ($203m)
     * CSEC Neurotrainer I 1k rep $4m
 Upgrade home server memory & NeuroFlux Governor as much as possible
 
-
-Train dex & agi to 50
-Rob store until $1.2m
-Travel to Ishima, join Tian Di Hui ($1m, hack 50)
-Upgrade home server (16gb)
-Buy tor router & brutessh
-Join CSEC (scan-root and backdoor CSEC)
-
-Reset 1:
+reset 2:
 Join Tian Di Hui ($1m, hack 50)
 Join CSEC (hack 60, 1 port)
 Join Sector-12 and Aevum ($40m)
-Join Nitesec (hack 220, 2 ports)
+Join Nitesec (hack 215, 2 ports)
 Hack for Sector-12 until 12.5k rep
 Hack for Nitesec until 15k rep
 Buy & install augmentations: ($4.3b)
@@ -65,41 +66,45 @@ Buy & install augmentations: ($4.3b)
     * Sector-12 Augmented Targeting II $42.5
     * Sector-12 Wired Reflexes $2.5
 
-Reset 2:
+
+reset 3:
 Join Tian Di Hui ($1m, hack 50)
+Hack for Tian Di Hui
 Join CSEC (hack 60, 1 port)
 Join Ishima, New Tokyo, Chongqing ($30m, $20m, $20m)
-Join Nitesec (hack 220, 2 ports)
-Hack for Tian Di Hui until 75k rep
-Hack Nitesec until 45k rep
+Join Nitesec (hack 210+, 2 ports)
+Hack Nitesec until 50k rep
+@ $1b
+run buy-servers.js
+run attack.js harakiri-sushi
+run attack.js phantasy
+Join Black Hand 
 Buy & install augmentations: ($1.4b)
-    * Tian Di Hui Neuroreceptor Management Implant 75k rep $550m
     * Nitesec Neural-Retention Enhancement $250m
-    * CSEC Cranial Signal Processors - Gen I 10k rep $70m
+    * Nitesec CRTX42-AA Gene Modification 45k rep $225m
+    * Nitesec Cranial Signal Processors - Gen I 10k rep $70m
     * Nitesec Cranial Signal Processors - Gen II 18.75k rep $125m
-    * Tian Di Hui Nanofiber Weave 37.5k rep $125m
-    * Tian Di Hui Nuoptimal Nootropic Injector Implant 5k rep $20m
-    * Tian Di Hui Speech Enhancement 2.5k rep $12.5m
+    * Nitesec Cranial Signal Processors - Gen III 50k rep $550m
 
 
-
-
-1. Learn algorithms at rothman university until hack level 30 
-1. Train dex & agi until level 30
-1. Rob store until $2m
+reset 
 1. Join Tian Di Hui ($1m, hack 50)
+1. Hack for Tian Di Hui 
 1. Join CSEC (hack 60, 1 port)
 1. Join Nitesec (hack 220, 2 ports)
 1. Join Ishima, New Tokyo, Chongqing ($30m, $20m, $20m)
-1. run buy-servers.js
-1. Hack for Chongqing until 50k rep
-1. Hack for Nitesec until 112.5k rep
+1. Hack for Tian Di Hui until 75k rep
+    * Tian Di Hui Neuroreceptor Management Implant 75k rep $550m
+    * Tian Di Hui Nanofiber Weave 37.5k rep $125m
+    * Tian Di Hui Nuoptimal Nootropic Injector Implant 5k rep $20m
+    * Tian Di Hui Speech Processor 2.5k rep $12.5m
+    * Tian Di Hui Speech Enhancement 2.5k rep $12.5m
 
+
+1. Hack for Chongqing until 112.5k rep
     * Chongqing Neuralstimulator 50k rep, $3b
-    * Nitesec Cranial Signal Processors - Gen III 50k rep $550m
-    * Nitesec Datajack 112.5k rep $450m
+    * Chongqing Datajack 112.5k rep $450m
     * Chongqing Neuregen Gene Modification 37.5k rep $375m
-    * Nitesec CRTX42-AA Gene Modification 45k rep $225m
 
 
 1. Hack for Blackhand until 50k rep

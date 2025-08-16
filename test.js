@@ -1,7 +1,12 @@
-import { FNAMES } from "/utils/constants.js";
+import { PORTS, FNAMES } from "/utils/constants.js";
 
 /** @param {NS} ns */
 export async function main(ns) {
+  ns.tprint(ns.getServerMoneyAvailable('home'));
+  ns.tprint(`home    ${ns.getServerMaxRam('home')}`);
+  ns.tprint(`home-0  ${ns.getServerMaxRam('home-0')}`);
+  ns.tprint(`home-24 ${ns.getServerMaxRam('home-24')}`);
+  return
   const { currentNode, ownedAugs, ownedSF } = ns.getResetInfo();
   ns.tprint(ownedAugs);
 
