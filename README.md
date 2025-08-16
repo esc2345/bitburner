@@ -26,7 +26,8 @@ https://github.com/afsanchez001/BitburnerRepo/tree/main/OptiRunner
 
 0. upgrade home computer 
 1. install S.N.A
-2. install CashRoot Starter Kit 
+2. install CashRoot Starter Kit
+3. install Neural-Retention Enhancement
 
 
 
