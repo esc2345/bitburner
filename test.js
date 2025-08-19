@@ -1,8 +1,11 @@
+import { TODO } from "utils/functions.js";
 import { PORTS, FNAMES } from "/utils/constants.js";
 
 /** @param {NS} ns */
 export async function main(ns) {
-  ns.tprint(ns.getServerMoneyAvailable('home'));
+
+
+  ns.tprint(ns.getResetInfo());
   ns.tprint(`home    ${ns.getServerMaxRam('home')}`);
   ns.tprint(`home-0  ${ns.getServerMaxRam('home-0')}`);
   ns.tprint(`home-24 ${ns.getServerMaxRam('home-24')}`);
@@ -18,10 +21,10 @@ export async function main(ns) {
   const sourceFiles = ownedSF;
   ns.tprint(augments.size);
   let resetCounter = 0;
-  if(augments.has('Social Negotiation Assistant (S.N.A)')){
+  if (augments.has('Social Negotiation Assistant (S.N.A)')) {
     resetCounter = 1;
   }
-  if(augments.has('CashRoot Starter Kit')){
+  if (augments.has('CashRoot Starter Kit')) {
     resetCounter = 2;
   }
   ns.tprint(resetCounter);

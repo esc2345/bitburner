@@ -1,4 +1,4 @@
-import { wait_for_script } from "/utils/functions.js";
+import { wait_for_script, TODO } from "/utils/functions.js";
 import { FNAMES } from "/utils/constants.js";
 
 
@@ -13,7 +13,7 @@ export async function main(ns) {
 
   const states = new Map();
   states.set('s0', {
-    'message': '* * * Learn algorithms to hack 50 * * *',
+    'message': 'Learn algorithms<br>to hack 50',
     'actions': [],
     'transitions': [{ 'condition': (ns) => ns.getHackingLevel() >= 10, 'next': 'hackJoesguns' }]
   });
@@ -23,22 +23,22 @@ export async function main(ns) {
     'transitions': [{ 'condition': (ns) => ns.getHackingLevel() >= 50, 'next': 'trainDex50' }]
   });
   states.set('trainDex50', {
-    'message': '* * * Train dex to 50 * * *',
+    'message': 'Train dex to 50',
     'actions': [],
     'transitions': [{ 'condition': (ns) => ns.getPlayer().skills.dexterity >= 50, 'next': 'trainAgi50' }]
   });
   states.set('trainAgi50', {
-    'message': '* * * Train agi to 50 * * *',
+    'message': 'Train agi to 50',
     'actions': [],
     'transitions': [{ 'condition': (ns) => ns.getPlayer().skills.agility >= 50, 'next': 'robStore' }]
   });
   states.set('robStore', {
-    'message': '* * * Rob store until $1.2m * * *',
+    'message': 'Rob store to $1.2m',
     'actions': [],
     'transitions': [{ 'condition': (ns) => ns.getServerMoneyAvailable('home') >= 1.2e6, 'next': 'wait1b' }]
   });
   states.set('wait1b', {
-    'message': '* * * Travel to Ishima, join Tian Di Hui ($1m, hack 50), buy tor router & brutessh * * *',
+    'message': 'Travel to Ishima<br>Join Tian Di Hui<br>Buy tor router & brutessh',
     'actions': [],
     'transitions': [{ 'condition': (ns) => ns.getServerMoneyAvailable('home') > 1e9, 'next': 'buyServers' }]
   });
@@ -57,8 +57,9 @@ export async function main(ns) {
 
   do {
     if (state.message != '') {
-      ns.print(state.message);
-      ns.ui.openTail();
+      TODO.setMessage(state.message);
+      //ns.print(state.message);
+      //ns.ui.openTail();
     }
     for (const a of state.actions) {
       switch (a.type) {
@@ -82,6 +83,7 @@ export async function main(ns) {
       await ns.sleep(100);
     }
   } while (id != null)
+  TODO.deleteMessage();
 
   return
 
