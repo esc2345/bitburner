@@ -14,18 +14,22 @@ export async function main(ns) {
   }
   const currentNode = ns.peek(PORTS.currentNode);
   ns.tprint(`current bitnode = ${currentNode}`);
-  
+
   switch (currentNode) {
     case 1:
       if (ns.getServerMaxRam('home') < 16) {
-        ns.tprint(`
-* * * 
-Home server RAM < 16
-1. Train dex & agi to 20
-2. Shoplift until \$1.01m
-3. Upgrade home computer RAM
-4. soft reset
-* * *`);
+        ns.print(`
+  * * * * * * * * * * * * * * * * * * * * * 
+  *                                       *
+  *   Home server RAM < 16                *
+  *   1. Train dex & agi to 20            *
+  *   2. Shoplift until \$1.01m            *
+  *   3. Upgrade home computer RAM        *
+  *   4. soft reset                       *
+  *                                       *
+  * * * * * * * * * * * * * * * * * * * * *
+        `);
+        ns.ui.openTail();
         return
       } else {
         ns.run('/utils/bitnode1.js');

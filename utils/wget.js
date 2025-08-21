@@ -3,6 +3,7 @@ export async function main(ns) {
   const githubBase = 'https://raw.githubusercontent.com/esc2345/bitburner/refs/heads/main/';
   const files = [
     "attack.js",
+    "backdoor-all.js",
     "buy-servers.js",
     "connect.js",
     "contracts.js",
