@@ -31,31 +31,57 @@ export async function wait_for_script(ns, scriptName) {
   }
 }
 
+
+export async function emulateTerminalCommand(ns, text) {
+  const enterEvent = new KeyboardEvent('keydown', {
+    key: 'Enter',
+    code: 'Enter',
+    keyCode: 13, // Deprecated, but still widely used for compatibility
+    which: 13,  // Deprecated, but still widely used for compatibility
+    bubbles: true, // Allows the event to bubble up the DOM tree
+    cancelable: true, // Allows the default action to be prevented
+  });
+
+  const doc = eval('document');
+  let terminalInput = doc.getElementById("terminal-input");
+  while (!terminalInput){
+    terminalInput = doc.getElementById("terminal-input");
+    await ns.sleep(100);
+  }
+  terminalInput.focus();
+  terminalInput.value = text;
+
+  const handler = Object.keys(terminalInput)[1];
+  terminalInput[handler].onChange({ target: terminalInput });
+  //  terminalInput[handler].onKeyDown({ keyCode: 13, preventDefault: () => null }); //enter
+  terminalInput.dispatchEvent(enterEvent);
+}
+
+
+
+
 export class TODO {
   static setMessage(msg) {
-    let temp, msgCSS = "MuiTypography-root MuiTypography-body1 css-1ogo764-workHeader";
-    eval('temp = document.getElementById("todoMsg")');
-    if (!temp) {
-      let myElement;
-      eval(`
-myElement = document.createElement("DIV");
-myElement.className = document.getElementsByTagName("TABLE")[0].parentElement.lastChild.className;
-      `);
-      myElement.id = "todoDiv";
-      myElement.style.setProperty('display', 'block', 'important');
-      myElement.style.setProperty('text-align', 'center');
-      myElement.innerHTML = `<p id="todoMsg" class="${msgCSS}">${msg}</p>`;
-      eval('document.getElementsByTagName("TABLE")[0].parentElement.appendChild(myElement)');
-    } else {
-      temp.innerHTML = msg;
+    let temp_p, temp_d;
+    temp_p = globalThis['myMessage'];
+    if (!temp_p) {
+      eval("temp_p = document.createElement('p')");
+      temp_p.className = globalThis['root'].firstChild.childNodes[0].getElementsByTagName('P')[0].className;
+      temp_p.style.textAlign = 'center';
+      temp_p.style.color = 'white';
+      temp_p.id = 'myMessage';
+
+      eval("temp_d = document.createElement('div')");
+      temp_d.className = globalThis['root'].firstChild.childNodes[1].firstChild.firstChild.childNodes[1].className;
+      temp_d.id = 'myMessageContainer';
+      temp_d.appendChild(temp_p);
+      globalThis['root'].firstChild.childNodes[1].firstChild.firstChild.appendChild(temp_d);
     }
+    temp_p.innerHTML = msg;
+
   }
-  static  deleteMessage() {
-    let temp;
-    eval('temp = document.getElementById("todoDiv")');
-    if(temp){
-      temp.parentElement.removeChild(temp);
-    }
+  static deleteMessage() {
+    globalThis['myMessageContainer'].parentNode.removeChild(globalThis['myMessageContainer']);
   }
 }
 
