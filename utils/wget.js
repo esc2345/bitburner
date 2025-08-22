@@ -6,6 +6,7 @@ export async function main(ns) {
     "buy-servers.js",
     "connect.js",
     "contracts.js",
+    "emulate.js",
     "generate-wget.js",
     "scan-root.js",
     "scripts/grow.js",
