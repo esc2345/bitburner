@@ -9,7 +9,10 @@ export async function main(ns) {
   ns.write(FNAMES.augments, JSON.stringify([...ownedAugs]), 'w');
   ns.write(FNAMES.sourceFiles, JSON.stringify([...ownedSF]), 'w');
 
-  let mults = {
+  let mults = ns.getHackingMultipliers();
+  ns.write(FNAMES.hackMults, JSON.stringify(mults), 'w');
+
+  mults = {
     "ScriptHackMoney": 1.0,
     "ServerGrowthRate": 1.0,
     "ServerWeakenRate": 1.0,
@@ -17,11 +20,8 @@ export async function main(ns) {
   };
   ns.write(FNAMES.bitnode, JSON.stringify(mults), 'w');
   if (currentNode == 5 || ownedSF.has('SF5')) {  // requires BitNode 5 or have Source-File 5
-    ns.run('/utils/real-bitnode-mults.js');
+    ns.run('/utils/setup-real-mults.js');
   }
-
-  mults = ns.getHackingMultipliers();
-  ns.write(FNAMES.hackMults, JSON.stringify(mults), 'w');
 
   let servers = list_servers(ns);
   for (let name of servers) {

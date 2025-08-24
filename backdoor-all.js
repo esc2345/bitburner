@@ -1,4 +1,5 @@
-import { list_servers, emulateTerminalCommand } from "/utils/functions.js";
+import { doTerminalCommand } from "/utils/controller.js";
+import { list_servers } from "/utils/functions.js";
 
 function getPath(ns, parent, server, target) {
   const children = ns.scan(server).filter(s => parent != s);
@@ -22,7 +23,7 @@ export async function main(ns) {
   for (const serverName of toBackdoor) {
     const path = ['home'].concat(getPath(ns, '', 'home', serverName));
     const command = path.join(";connect ") + ';backdoor';
-    await emulateTerminalCommand(ns, command);
+    await doTerminalCommand(ns, command);
     await ns.sleep(ns.getHackTime(serverName) / 4 + 1000);
   }
 
